@@ -1,28 +1,38 @@
-# Red Wine Quality Prediction and Deployment
+# Red Wine Quality Prediction (Jupyter Notebook)
 
-This project automates wine quality prediction using machine learning, providing accurate and efficient insights for quality assurance.
+This project automates wine quality prediction using machine learning, providing accurate and efficient insights for quality assurance. This repository contains the complete analysis and model development within a Jupyter Notebook.
 
-## Key Features
-- **Exploratory Data Analysis (EDA)**: Comprehensive data cleaning including outlier removal and duplicate handling.
-- **Feature Engineering**: Correlation analysis and selection of high-impact features.
-- **SMOTE Balancing**: Addressed class imbalance to ensure robust training.
-- **XGBoost Classifier**: Selected as the best performing model after 10-fold cross-validation.
-- **Premium UI**: Modern Flask application with glassmorphism design.
+## 🚀 Overview
+The project uses physicochemical properties of red wine to predict its quality. It includes comprehensive data cleaning, feature engineering with SMOTE balancing, and a tuned XGBoost classifier.
 
-## Technical Stack
-- **Languages**: Python, HTML, CSS
-- **ML Libraries**: Scikit-Learn, XGBoost, Pandas, NumPy, Imbalanced-Learn
-- **Web Framework**: Flask
-- **Deployment**: Render / Gunicorn
+## 📓 Features
+- **End-to-End Notebook**: Data collection, EDA, and model training in a single file.
+- **Interactive Dashboard**: Built-in sliders and input fields (using `ipywidgets`) for real-time quality prediction.
+- **Advanced ML**: Utilizes XGBoost with hyperparameter tuning via GridSearchCV.
+- **Class Balancing**: Handles minority classes using SMOTE.
 
-## Performance Metrics
-- **Accuracy**: ~93.6% (Test Set)
-- **F1-Score**: ~0.94
-- **Precision (Good Wine)**: ~0.92
-- **Recall (Good Wine)**: ~0.95
+## 🛠️ How to Use
+### Option 1: Google Colab (Recommended)
+1. Open [Google Colab](https://colab.research.google.com).
+2. Go to the **GitHub** tab.
+3. Paste the repository URL: `https://github.com/myselfsukhendu09/Red-wine-quality-predictor`.
+4. Click on `Red_Wine_Quality_Prediction.ipynb`.
 
-## How to Run Locally
-1. Install dependencies: `pip install -r requirements.txt`
-2. Run training script: `python train.py`
-3. Start Flask app: `python app.py`
-4. Visit `http://127.0.0.1:5000`
+### Option 2: Local Jupyter Server
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/myselfsukhendu09/Red-wine-quality-predictor.git
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Launch Jupyter:
+   ```bash
+   jupyter notebook Red_Wine_Quality_Prediction.ipynb
+   ```
+
+## 📊 Performance
+- **Test Accuracy**: ~94%
+- **Model**: XGBoost (optimized)
+- **Features Analyzed**: Volatile Acidity, Residual Sugar, Chlorides, Total Sulfur Dioxide, Density, Sulphates, Alcohol.
