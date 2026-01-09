@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VinoSense | Red Wine Quality Prediction</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #722f37; /* Wine Color */
+            --primary-light: #9b4d57;
+            --accent: #d4af37; /* Gold */
+            --bg-dark: #121212;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(114, 47, 55, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(114, 47, 55, 0.15) 0%, transparent 40%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        header {
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-weight: 700;
+            letter-spacing: -1px;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding-bottom: 5rem;
+        }
+
+        .main-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.8rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 10px rgba(155, 77, 87, 0.3);
+        }
+
+        .btn-predict {
+            grid-column: 1 / -1;
+            margin-top: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-predict:hover {
+            transform: translateY(-3px);
+            background: var(--primary-light);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-section {
+            margin-top: 2rem;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 12px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-good {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+            color: #22c55e;
+        }
+
+        .result-bad {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .result-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .probability {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .error-text {
+            color: #ef4444;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .info-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .contact-info p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VinoSense</h1>
+        <p style="color: var(--text-muted); margin-top: 0.5rem;">AI-Powered Red Wine Quality Prediction</p>
+    </header>
+
+    <div class="container">
+        <div class="main-card">
+            <form action="/predict" method="post">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Volatile Acidity</label>
+                        <input type="number" step="0.01" name="volatile acidity" value="{{ features['volatile acidity'] if features else '0.5' }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Residual Sugar</label>
+                        <input type="number" step="0.1" name="residual sugar" value="{{ features['residual sugar'] if features else '2.5' }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Chlorides</label>
+                        <input type="number" step="0.001" name="chlorides" value="{{ features['chlorides'] if features else '0.08' }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Total Sulfur Dioxide</label>
+                        <input type="number" step="1" name="total sulfur dioxide" value="{{ features['total sulfur dioxide'] if features else '46' }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Density</label>
+                        <input type="number" step="0.0001" name="density" value="{{ features['density'] if features else '0.996' }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Sulphates</label>
+                        <input type="number" step="0.01" name="sulphates" value="{{ features['sulphates'] if features else '0.6' }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Alcohol Content (%)</label>
+                        <input type="number" step="0.1" name="alcohol" value="{{ features['alcohol'] if features else '10.5' }}" required>
+                    </div>
+                    <button type="submit" class="btn-predict">Analyze Vintage</button>
+                </div>
+            </form>
+
+            {% if prediction_text %}
+            <div class="result-section {{ result_class }}">
+                <div class="result-title">{{ prediction_text }}</div>
+                <div class="probability">{{ probability_text }}</div>
+            </div>
+            {% endif %}
+
+            {% if error_text %}
+            <div class="error-text">
+                {{ error_text }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="info-section">
+            <div class="info-card">
+                <h2>Parameter Guide</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Volatile Acidity</td>
+                            <td>Amount of acetic acid (vinegar taste)</td>
+                        </tr>
+                        <tr>
+                            <td>Chlorides</td>
+                            <td>Amount of salt in the wine</td>
+                        </tr>
+                        <tr>
+                            <td>Total Sulfur Dioxide</td>
+                            <td>Sulphate gas content (preservative)</td>
+                        </tr>
+                        <tr>
+                            <td>Sulphates</td>
+                            <td>Antimicrobial and antioxidant additive</td>
+                        </tr>
+                        <tr>
+                            <td>Alcohol</td>
+                            <td>Percentage content of alcohol by volume</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-card contact-info">
+                <h2>About the Project</h2>
+                <p>
+                    VinoSense uses a tuned XGBoost classifier trained on the Red Wine Quality dataset. 
+                    The model analyzes physicochemical properties to predict if a wine is "Good" (Score ≥ 7) 
+                    with a test accuracy of ~94%.
+                </p>
+                <div class="social-links">
+                    <a href="#">GitHub Repository</a>
+                    <a href="#">Dataset Source</a>
+                    <a href="#">Contact Developer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
