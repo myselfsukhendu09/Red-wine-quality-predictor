@@ -18,7 +18,7 @@ The project uses physicochemical properties of red wine to predict its quality. 
 3. Paste the repository URL: `https://github.com/myselfsukhendu09/Red-wine-quality-predictor`.
 4. Click on `Red_Wine_Quality_Prediction.ipynb`.
 
-### Option 2: Local Jupyter Server
+### Option 2: Local Deployment
 1. Clone the repository:
    ```bash
    git clone https://github.com/myselfsukhendu09/Red-wine-quality-predictor.git
@@ -27,10 +27,11 @@ The project uses physicochemical properties of red wine to predict its quality. 
    ```bash
    pip install -r requirements.txt
    ```
-3. Launch Jupyter:
+3. Launch Streamlit Application:
    ```bash
-   jupyter notebook Red_Wine_Quality_Prediction.ipynb
+   streamlit run streamlit_app.py
    ```
+4. Or use Jupyter: `jupyter notebook Red_Wine_Quality_Prediction.ipynb`
 
 ## 📊 Performance
 - **Test Accuracy**: ~94%
